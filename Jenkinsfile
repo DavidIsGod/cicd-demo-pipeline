@@ -59,7 +59,8 @@ pipeline {
               -e SONAR_TOKEN="$SONAR_TOKEN" \
               -v "$JENKINS_VOLUME:/var/jenkins_home" \
               -w "$WORKSPACE" \
-              sonarsource/sonar-scanner-cli
+              sonarsource/sonar-scanner-cli \
+              -Dsonar.scanner.metadataFilePath="$WORKSPACE/report-task.txt"
           '''
         }
       }
@@ -71,7 +72,7 @@ pipeline {
           sh '''
             set -eu
 
-            TASK_URL=$(grep '^ceTaskUrl=' .scannerwork/report-task.txt | cut -d= -f2-)
+            TASK_URL=$(grep '^ceTaskUrl=' report-task.txt | cut -d= -f2-)
 
             while true; do
               RESPONSE=$(curl -s -u "$SONAR_TOKEN:" "$TASK_URL")

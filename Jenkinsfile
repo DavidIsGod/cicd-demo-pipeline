@@ -6,6 +6,7 @@ pipeline {
     MAVEN_IMAGE = 'maven:3.9.9-eclipse-temurin-11'
     SONAR_PROJECT_KEY = 'mi-app'
     SONAR_HOST_URL = 'http://sonarqube:9000'
+    JENKINS_VOLUME = 'jenkins_home'
   }
 
   stages {
@@ -20,8 +21,8 @@ pipeline {
         sh '''
           docker run --rm \
             --network cicd-net \
-            -v "$WORKSPACE:/workspace" \
-            -w /workspace \
+            -v "$JENKINS_VOLUME:/var/jenkins_home" \
+            -w "$WORKSPACE" \
             "$MAVEN_IMAGE" \
             mvn clean test \
               -Dgroups=au.com.equifax.cicddemo.domain.UnitTest,au.com.equifax.cicddemo.domain.IntegrationTest
@@ -34,8 +35,8 @@ pipeline {
         sh '''
           docker run --rm \
             --network cicd-net \
-            -v "$WORKSPACE:/workspace" \
-            -w /workspace \
+            -v "$JENKINS_VOLUME:/var/jenkins_home" \
+            -w "$WORKSPACE" \
             "$MAVEN_IMAGE" \
             mvn -DskipTests package
         '''
@@ -56,7 +57,8 @@ pipeline {
               --network cicd-net \
               -e SONAR_HOST_URL="$SONAR_HOST_URL" \
               -e SONAR_TOKEN="$SONAR_TOKEN" \
-              -v "$WORKSPACE:/usr/src" \
+              -v "$JENKINS_VOLUME:/var/jenkins_home" \
+              -w "$WORKSPACE" \
               sonarsource/sonar-scanner-cli
           '''
         }
@@ -130,7 +132,7 @@ pipeline {
       echo 'Pipeline failed. Review Jenkins console, SonarQube, and Trivy output.'
     }
     always {
-      junit 'target/surefire-reports/*.xml'
+      junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
       cleanWs()
     }
   }

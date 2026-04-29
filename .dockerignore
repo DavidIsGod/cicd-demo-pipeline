@@ -1,0 +1,8 @@
+.git
+.scannerwork
+README.md
+jenkins
+k8s-config
+commands.sh
+docker-compose.yml
+Makefile

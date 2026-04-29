@@ -54,6 +54,7 @@ pipeline {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
           sh '''
             docker run --rm \
+              --user root \
               --network cicd-net \
               -e SONAR_HOST_URL="$SONAR_HOST_URL" \
               -e SONAR_TOKEN="$SONAR_TOKEN" \

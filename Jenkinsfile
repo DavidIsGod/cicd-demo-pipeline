@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     APP_IMAGE = 'mi-app:latest'
-    MAVEN_IMAGE = 'maven:3.9.9-eclipse-temurin-11'
+    MAVEN_IMAGE = 'maven:3.9.9-eclipse-temurin-17'
     SONAR_PROJECT_KEY = 'mi-app'
     SONAR_HOST_URL = 'http://sonarqube:9000'
     JENKINS_VOLUME = 'jenkins_home'

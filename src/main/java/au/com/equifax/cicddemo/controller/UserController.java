@@ -24,16 +24,16 @@ public class UserController {
         this.service=param;
     }
 
-    @GetMapping("/users")
+    @GetMapping({"/users", "/users/"})
     public Collection<User> retrieveAllUsers() {
         return service.getUsers();
     }
-    @GetMapping("/users/{id}")
+    @GetMapping({"/users/{id}", "/users/{id}/"})
     public User retrieveStudent(@PathVariable long id) {
         Optional<User> student = service.findById(id);
         return student.get();
     }
-    @PostMapping("/users")
+    @PostMapping({"/users", "/users/"})
     public ResponseEntity<Object> createStudent(@RequestBody User user) {
         User savedUser = service.save(user);
 
